@@ -32,6 +32,8 @@ if dev.is_kernel_driver_active(interface) is True:
 while True :
     try:
         data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
+        # click value
+        click=data[1] # if it is 7 mouse down else if it is 4 it is mouse up 
         # get the coordinates
         xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
         # convert to decimal
@@ -44,7 +46,8 @@ while True :
         print "%d, %d"%(screen_xcor,screen_ycor)
         # move mouse
         if xcor_dec!=0 and ycor_dec!=0:
-          m.click(screen_xcor, screen_ycor, 1)
+          pass
+          #m.click(screen_xcor, screen_ycor, 1)
     except usb.core.USBError as e:
         data = None
         if e.args == ('Operation timed out',):
