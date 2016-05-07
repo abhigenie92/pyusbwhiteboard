@@ -29,6 +29,7 @@ if dev.is_kernel_driver_active(interface) is True:
 	dev.detach_kernel_driver(interface)
 	# claim the device
 	usb.util.claim_interface(dev, interface)
+prev_x=None
 while True :
 		try:
 				data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
@@ -42,8 +43,8 @@ while True :
 				# convert to relative screen coordinates
 				screen_xcor=int(round((float(xcor_dec-white_board_x_min)/float(white_board_x_diff)) * x_screen))
 				screen_ycor=int(round((float(ycor_dec-white_board_y_min)/float(white_board_y_diff)) * y_screen))
-				print "%d, %d"%(xcor_dec,ycor_dec)
-				print "%d, %d"%(screen_xcor,screen_ycor)
+				#print "%d, %d"%(xcor_dec,ycor_dec)
+				#print "%d, %d"%(screen_xcor,screen_ycor)
 				# check if it is valid event
 				if xcor_dec!=0 and ycor_dec!=0:
 					# move mouse	
@@ -51,6 +52,7 @@ while True :
 						# mean mouse down event
 						if prev_x:
 							# drag event
+							m.drag(screen_xcor, screen_ycor)
 							pass # draw a line using prev_x, prev_y and screen_xcor,screen_ycor 
 						else:
 							# first button press event
