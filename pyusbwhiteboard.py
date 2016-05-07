@@ -3,7 +3,7 @@ import usb.core
 import usb.util
 from pymouse import PyMouse
 
-# white coordinates axis computed by checking the output against strokes
+# whiteboard coordinates axis computed by checking the output against strokes
 white_board_x_min=(1<<8)+1
 white_board_x_max=(127<<8)+255
 white_board_y_min=(1<<8)+1
@@ -30,44 +30,46 @@ if dev.is_kernel_driver_active(interface) is True:
 	# claim the device
 	usb.util.claim_interface(dev, interface)
 mouse_down_event=False
-while True :
-		try:
-				data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
-				# click value
-				click=data[1] # if it is 7 mouse down else if it is 4 it is mouse up 
-				# get the coordinates
-				xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
-				# convert to decimal
-				xcor_dec=(xcor<<8)+dec_x_binary
-				ycor_dec=(ycor<<8)+dec_y_binary
-				# convert to relative screen coordinates
-				screen_xcor=int(round((float(xcor_dec-white_board_x_min)/float(white_board_x_diff)) * x_screen))
-				screen_ycor=int(round((float(ycor_dec-white_board_y_min)/float(white_board_y_diff)) * y_screen))
-				#print "%d, %d"%(xcor_dec,ycor_dec)
-				#print "%d, %d"%(screen_xcor,screen_ycor)
-				# check if it is valid event
-				if xcor_dec!=0 and ycor_dec!=0:
-					# move mouse	
-					if click==7:
-						# mean mouse down event
-						if mouse_down_event:
-							# drag event
-							# draw a line from previous coordinates
-							m.drag(screen_xcor, screen_ycor)
+try:	
+	while True :
+			try:
+					data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
+					# click value
+					click=data[1] # if it is 7 mouse down else if it is 4 it is mouse up 
+					# get the coordinates
+					xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
+					# convert to decimal
+					xcor_dec=(xcor<<8)+dec_x_binary
+					ycor_dec=(ycor<<8)+dec_y_binary
+					# convert to relative screen coordinates
+					screen_xcor=int(round((float(xcor_dec-white_board_x_min)/float(white_board_x_diff)) * x_screen))
+					screen_ycor=int(round((float(ycor_dec-white_board_y_min)/float(white_board_y_diff)) * y_screen))
+					#print "%d, %d"%(xcor_dec,ycor_dec)
+					#print "%d, %d"%(screen_xcor,screen_ycor)
+					# check if it is valid event
+					if xcor_dec!=0 and ycor_dec!=0:
+						# move mouse	
+						if click==7:
+							# mean mouse down event
+							if mouse_down_event:
+								# drag event
+								# draw a line from previous coordinates
+								m.drag(screen_xcor, screen_ycor)
+							else:
+								# first button press event
+								m.click(screen_xcor, screen_ycor, 1)
+							mouse_down_event=True
 						else:
-							# first button press event
-							m.click(screen_xcor, screen_ycor, 1)
-						mouse_down_event=True
-					else:
-						# mouse up event
-						# set event type in mouse_down_event
-						# first button press and drag
-						mouse_down_event=False
-		except usb.core.USBError as e:
-				data = None
-				if e.args == ('Operation timed out',):
-					continue  
-# release the device
-usb.util.release_interface(dev, interface)
-# reattach the device to the OS kernel
-dev.attach_kernel_driver(interface)
+							# mouse up event
+							# set event type in mouse_down_event
+							# first button press and drag
+							mouse_down_event=False
+			except usb.core.USBError as e:
+					data = None
+					if e.args == ('Operation timed out',):
+						continue  
+finally:
+	# release the device
+	usb.util.release_interface(dev, interface)
+	# reattach the device to the OS kernel
+	dev.attach_kernel_driver(interface)
