@@ -29,7 +29,7 @@ if dev.is_kernel_driver_active(interface) is True:
 	dev.detach_kernel_driver(interface)
 	# claim the device
 	usb.util.claim_interface(dev, interface)
-prev_x=None
+mouse_down_event=False
 while True :
 		try:
 				data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
@@ -50,22 +50,19 @@ while True :
 					# move mouse	
 					if click==7:
 						# mean mouse down event
-						if prev_x:
+						if mouse_down_event:
 							# drag event
+							# draw a line from previous coordinates
 							m.drag(screen_xcor, screen_ycor)
-							pass # draw a line using prev_x, prev_y and screen_xcor,screen_ycor 
 						else:
 							# first button press event
 							m.click(screen_xcor, screen_ycor, 1)
-						# store this coordinate to draw a line
-						prev_x=screen_xcor
-						prev_y=screen_ycor
+						mouse_down_event=True
 					else:
 						# mouse up event
-						# set the prev variables to None to distinguish events between 
+						# set event type in mouse_down_event
 						# first button press and drag
-						prev_x=None
-						prev_y=None
+						mouse_down_event=False
 		except usb.core.USBError as e:
 				data = None
 				if e.args == ('Operation timed out',):
