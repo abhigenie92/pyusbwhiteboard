@@ -2,7 +2,8 @@
 
 ## Installation:
 ### Not using pip/apt-get:
-sudo apt-get install git
+```sudo apt-get install git```
+
 1. Install python-xlib
 ```
 wget https://sourceforge.net/projects/python-xlib/files/python-xlib/0.15rc1/python-xlib-0.15rc1.tar.gz
