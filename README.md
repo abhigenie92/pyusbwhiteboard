@@ -26,6 +26,8 @@ python setup.py install
 ```
 
 ## Main script download and run:
+```
 git clone https://github.com/abhigenie92/pyusbwhiteboard.git
 cd pyusbwhiteboard
 sudo python pyusbwhiteboard
+```
