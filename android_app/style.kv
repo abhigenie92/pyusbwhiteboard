@@ -1,0 +1,47 @@
+#:import C kivy.utils.get_color_from_hex
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import os os
+
+AppScreenManager:
+    transition: FadeTransition()
+    MainScreen:
+    ConnectedScreen:
+
+
+<MainScreen>:
+    name: "MainScreen"
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [200,75,200,75]
+        spacing: 20
+        Label:
+            text:"Public IP address:"
+            font_size:25
+        TextInput:
+            id:ip_addr 
+            font_size:35
+        Label:
+            text:"Port number:"
+            font_size:25
+        TextInput:
+            id:port_no
+            font_size:35
+            password:True
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                border: (3, 3, 3, 3)
+                spacing: 20
+                text:"connect"
+                font_size:25
+                bold: True
+                on_release: root.connect()
+
+<ConnectedScreen>:
+	name: "ConnectedScreen"
+	BoxLayout:
+		orientation: 'vertical'
+        Label:
+        	id:data_recv 
+            text:""
+            font_size:25
