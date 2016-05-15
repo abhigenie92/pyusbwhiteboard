@@ -6,6 +6,7 @@
 sudo apt-get install python-xlib
 sudo pip install pyusb
 sudo pip install PyUserInput```
+
 ### Not using pip/apt-get:
 ```sudo apt-get install git```
 
