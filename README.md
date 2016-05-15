@@ -6,6 +6,7 @@
 sudo apt-get install python-xlib
 sudo pip install pyusb
 sudo pip install PyUserInput
+sudo pip install hg+http://bitbucket.org/pygame/pygame
 ```
 
 ### Not using pip/apt-get:
