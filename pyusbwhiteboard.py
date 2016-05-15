@@ -71,8 +71,10 @@ if board_calib:
 		# clears the screen and waits for 5 seconds
 		pygame_obj.clear_screen()
 		time.sleep(5)
+	pygame_obj.quit()
 	offset_x=sum(offset_x_list) / len(offset_x_list)
 	offset_y=sum(offset_y_list) / len(offset_y_list)
+	
 
 # normal movement code
 try:	
