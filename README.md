@@ -10,7 +10,7 @@ sudo pip install hg+http://bitbucket.org/pygame/pygame
 ```
 
 ### Not using pip/apt-get:
-```sudo apt-get install git```
+```sudo apt-get install git mercurial```
 
 * Install python-xlib
 ```
@@ -30,6 +30,12 @@ sudo python setup.py install
 ```
 git clone https://github.com/SavinaRoja/PyUserInput.git
 cd PyUserInput
+python setup.py install
+```
+* Install pygame(used for calibration)
+```
+hg clone https://bitbucket.org/pygame/pygame
+cd pygame
 python setup.py install
 ```
 
