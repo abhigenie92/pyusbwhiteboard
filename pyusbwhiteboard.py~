@@ -7,8 +7,8 @@ pygame.init()
 from pygame_calib import PygameCalib
 import time
 # flage to determine if calibration has to be done
-board_calib=True
-debug=False
+board_calib=False
+debug=True
 # whiteboard coordinates axis computed by checking the output against strokes
 white_board_x_min=(2<<8)+1
 white_board_x_max=(127<<8)+255
@@ -27,7 +27,7 @@ def transform_board_screen(xcor,ycor,dec_x_binary,dec_y_binary):
 	xcor_dec=(xcor<<8)+dec_x_binary
 	ycor_dec=(ycor<<8)+dec_y_binary
 	if debug:	
-		print xcor,ycor
+		print "%d.%d %d.%d"%(xcor,dec_x_binary,ycor,dec_y_binary)
 	# convert to relative screen coordinates
 	screen_xcor=int(round((float(xcor_dec-white_board_x_min)/float(white_board_x_diff)) * x_screen))
 	screen_ycor=int(round((float(ycor_dec-white_board_y_min)/float(white_board_y_diff)) * y_screen))
@@ -61,7 +61,7 @@ if board_calib:
 	pygame_obj=PygameCalib((x_screen,y_screen))
 	offset_x_list=[]
 	offset_y_list=[]
-	for i in range(5):
+	for i in range(10):
 		flag=True		
 		pygame_obj.set_display_title('Touch the red dot'+" "+str(i))
 		coordinates_circle=pygame_obj.draw()
@@ -76,19 +76,21 @@ if board_calib:
 		xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
 		screen_xcor,screen_ycor=transform_board_screen(xcor,ycor,dec_x_binary,dec_y_binary)
 		# determine offsets for this click
-		x_iter_off=coordinates_circle[0]-screen_xcor
-		y_iter_off=coordinates_circle[1]-screen_ycor
+		x_iter_off=screen_xcor-coordinates_circle[0]
+		y_iter_off=screen_ycor-coordinates_circle[1]
 		offset_x_list.append(x_iter_off)
 		offset_y_list.append(y_iter_off)
+		print "Iteration %d , Offset: %d, %d" %(i,x_iter_off,y_iter_off)
+		print "Screen Coordinates: (%d,%d) ; Board Coordinates: (%d,%d)" %(screen_xcor,screen_ycor,coordinates_circle[0],coordinates_circle[1])		
 		# clears the screen and waits for 5 seconds
 		pygame_obj.clear_screen()
-		pygame_obj.set_display_title("Done"," "+str(i))
+		pygame_obj.set_display_title("Done"+" "+str(i))
 		time.sleep(1)		
 	offset_x=sum(offset_x_list) / len(offset_x_list)
 	offset_y=sum(offset_y_list) / len(offset_y_list)
 	pygame_obj.quit()
 	print "Finished Board Calibration"
-sub
+
 # normal movement code
 try:	
 	while True :
