@@ -17,7 +17,6 @@ class PygameCalib:
 		# set a random location on screen
 		coordinates_circle=random.randint(50,self.xlim-50),random.randint(50,self.ylim-50)
 		pygame.draw.circle(self.screen,self.red,coordinates_circle,5,0)
-		pygame.display.set_caption('Touch the red dot')
 		pygame.display.update()
 		return coordinates_circle
 
