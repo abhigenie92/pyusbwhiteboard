@@ -24,6 +24,9 @@ class PygameCalib:
 	def clear_screen(self):
 		self.screen.fill(self.black)
 
+	def set_display_title(self,string):
+		pygame.display.set_caption(string)
+
 	def quit(self):
 		pygame.display.quit()
 

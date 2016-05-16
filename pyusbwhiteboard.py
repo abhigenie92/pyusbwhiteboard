@@ -62,6 +62,7 @@ if board_calib:
 	offset_x_list=[]
 	offset_y_list=[]
 	for i in range(5):
+		pygame_obj.set_display_title('Touch the red dot'+str(i))
 		coordinates_circle=pygame_obj.draw()
 		data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize,1000*50000)
 		xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
@@ -73,13 +74,13 @@ if board_calib:
 		offset_y_list.append(y_iter_off)
 		# clears the screen and waits for 5 seconds
 		pygame_obj.clear_screen()
-		time.sleep(2)
-		print "done "+str(i)
+		pygame_obj.set_display_title("Done")
+		time.sleep(1)		
 	offset_x=sum(offset_x_list) / len(offset_x_list)
 	offset_y=sum(offset_y_list) / len(offset_y_list)
 	pygame_obj.quit()
 	print "Finished Board Calibration"
-
+sub
 # normal movement code
 try:	
 	while True :
