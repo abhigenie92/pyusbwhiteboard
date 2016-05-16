@@ -21,11 +21,12 @@ white_board_y_diff=white_board_y_max-white_board_y_min
 # intialize offsets to zero, will change later after calbiration
 offset_x,offset_y=0,0
 
-def transform_board_screen(xcor,ycor,dec_x_binary,dec_y_binary,offset_x,offset_y):
+def transform_board_screen(xcor,ycor,dec_x_binary,dec_y_binary):
 	''' transforms board coordinateas to screen coordinates'''
 	# convert to decimal
 	xcor_dec=(xcor<<8)+dec_x_binary
 	ycor_dec=(ycor<<8)+dec_y_binary
+	print xcor,ycor
 	# convert to relative screen coordinates
 	screen_xcor=int(round((float(xcor_dec-white_board_x_min)/float(white_board_x_diff)) * x_screen))
 	screen_ycor=int(round((float(ycor_dec-white_board_y_min)/float(white_board_y_diff)) * y_screen))
@@ -55,12 +56,13 @@ mouse_down_event=False
 
 # board calibration code
 if board_calib:
+	print "Started Board Calibration"
 	pygame_obj=PygameCalib((x_screen,y_screen))
 	offset_x_list=[]
 	offset_y_list=[]
-	for i in range(5):
+	for i in range(2):
 		coordinates_circle=pygame_obj.draw()
-		data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
+		data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize,1000*500)
 		xcor,ycor,dec_x_binary,dec_y_binary=data[4],data[6],data[3],data[5]
 		screen_xcor,screen_ycor=transform_board_screen(xcor,ycor,dec_x_binary,dec_y_binary)
 		# determine offsets for this click
@@ -70,10 +72,11 @@ if board_calib:
 		offset_y_list.append(y_iter_off)
 		# clears the screen and waits for 5 seconds
 		pygame_obj.clear_screen()
-		time.sleep(5)
+		time.sleep(1)
 	offset_x=sum(offset_x_list) / len(offset_x_list)
 	offset_y=sum(offset_y_list) / len(offset_y_list)
-
+	pygame_obj.quit()
+	print "Finished Board Calibration"
 # normal movement code
 try:	
 	while True :
@@ -87,7 +90,7 @@ try:
 			#print "%d, %d"%(xcor_dec,ycor_dec)
 			#print "%d, %d"%(screen_xcor,screen_ycor)
 			# check if it is valid event
-			if xcor_dec!=0 and ycor_dec!=0:
+			if xcor!=0 and ycor!=0:
 				# move mouse	
 				if click==7:
 					# mean mouse down event
