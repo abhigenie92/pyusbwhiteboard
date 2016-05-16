@@ -77,6 +77,7 @@ if board_calib:
 	offset_y=sum(offset_y_list) / len(offset_y_list)
 	pygame_obj.quit()
 	print "Finished Board Calibration"
+
 # normal movement code
 try:	
 	while True :
